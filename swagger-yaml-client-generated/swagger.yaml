@@ -1,0 +1,153 @@
+---
+swagger: "2.0"
+info:
+  description: ""
+  version: "1.0"
+  title: Wish List
+host: virtserver.swaggerhub.com
+basePath: /SashaMil/WishList/1.0
+schemes:
+- https
+paths:
+  /user/login:
+    get:
+      summary: Logs user into the system
+      operationId: loginUser
+      parameters:
+      - name: username
+        in: query
+        description: The user name for login
+        required: true
+        type: string
+      - name: password
+        in: query
+        description: The password for login
+        required: true
+        type: string
+      responses:
+        200:
+          description: successful login
+          schema:
+            type: string
+        400:
+          description: Invalid username/password supplied
+  /user/logout:
+    get:
+      tags:
+      - user
+      summary: Logs out current logged in user session
+      operationId: logoutUser
+      produces:
+      - application/json
+      parameters: []
+      responses:
+        200:
+          description: successful logout
+        400:
+          description: Error
+  /user:
+    post:
+      tags:
+      - user
+      summary: Create user
+      description: Registers new user
+      operationId: createUser
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Created user object
+        required: true
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        201:
+          description: item created
+        400:
+          description: invalid user object, object invalid
+  /wishlist:
+    post:
+      tags:
+      - wishlist
+      summary: Creates wishlist
+      operationId: newWishList
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Create wishlist object
+        required: true
+        schema:
+          $ref: '#/definitions/Wishlist'
+      responses:
+        201:
+          description: wishlist added
+        400:
+          description: invalid wishlist object
+    delete:
+      tags:
+      - wishlist
+      summary: Deletes a wishlist
+      operationId: deleteWishList
+      produces:
+      - application/json
+      parameters:
+      - name: wishListId
+        in: path
+        description: wishlist to delete
+        required: true
+        type: integer
+        format: int64
+      responses:
+        400:
+          description: Invalid ID supplied
+        404:
+          description: wishlist not found
+definitions:
+  User:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      username:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+      userStatus:
+        type: integer
+        format: int32
+        description: User Status
+  Wishlist:
+    type: object
+    required:
+    - items
+    - name
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+        example: christmas list
+      items:
+        $ref: '#/definitions/Wishlist_items'
+  Wishlist_items:
+    properties:
+      name:
+        type: string
+        example: firetruck
+      price:
+        type: string
+        example: $5.00
+      url:
+        type: string
+        example: amazon.com/firetruck
